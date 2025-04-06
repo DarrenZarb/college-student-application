@@ -20,5 +20,5 @@ Route::get('/', function () {
 });
 
 // Resourceful routes for colleges and students
-Route::resource('colleges', CollegeController::class)->except(methods: ['show']);
-Route::resource('students', controller: StudentController::class)->except(methods: ['show']);
+Route::resource('colleges', CollegeController::class);
+Route::resource('students', controller: StudentController::class);
