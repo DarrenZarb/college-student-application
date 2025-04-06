@@ -5,6 +5,13 @@
 @section('content')
     <h1>{{ isset($student) ? 'Edit Student' : 'Add New Student' }}</h1>
 
+    <!-- Display Success Message -->
+    @if(session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    @endif
+
     <!-- Display Errors -->
     @if($errors->any())
         <div class="alert alert-danger">
@@ -64,9 +71,7 @@
             <label for="college_id">College</label>
             <select name="college_id" id="college_id" class="form-control @error('college_id') is-invalid @enderror" required>
                 @foreach($colleges as $college)
-                    <option value="{{ $college->id }}" {{ old('college_id', $student->college_id ?? '') == $college->id ? 'selected' : '' }}>
-                        {{ $college->name }}
-                    </option>
+                    <option value="{{ $college->id }}" {{ old('college_id', $student->college_id ?? '') == $college->id ? 'selected' : '' }}>{{ $college->name }}</option>
                 @endforeach
             </select>
             @error('college_id')

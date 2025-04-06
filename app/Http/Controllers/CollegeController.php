@@ -32,16 +32,11 @@ class CollegeController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255|unique:colleges,name',  
-        ]);
-
-        // Validate the input data
-        $validated = $request->validate([
-            'name' => 'required|string|unique:colleges,name',  
-        'address' => 'required|string',  
+            'address' => 'required|string',  
         ]);
 
         // Create a new college
-        College::create($validated);
+        College::create($request->all());
 
         // Redirect with success message
         return redirect()->route('colleges.index')->with('success', 'College created successfully.');
@@ -66,13 +61,13 @@ class CollegeController extends Controller
         $college = College::findOrFail($id);
 
         // Validate the input data (allowing the current name to be unchanged)
-        $validated = $request->validate([
+        $request->validate([
             'name' => 'required|string|unique:colleges,name,' . $college->id, // Skip unique check for the current record
             'address' => 'required|string',
         ]);
 
         // Update the college
-        $college->update($validated);
+        $college->update($request->all());
 
         // Redirect with success message
         return redirect()->route('colleges.index')->with('success', 'College updated successfully.');
@@ -90,6 +85,7 @@ class CollegeController extends Controller
         // Redirect with success message
         return redirect()->route('colleges.index')->with('success', 'College deleted successfully.');
     }
+    
     public function show(string $id)
     {
         // Find the college by ID
