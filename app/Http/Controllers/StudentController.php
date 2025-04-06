@@ -37,9 +37,9 @@ class StudentController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:students,email',
-            'phone' => 'required|string|regex:/^\d{10}$/', // Adjust the regex to match the phone format you require
+            'phone' => 'required|string|regex:/^\d{10}$/', // Adjust regex if needed
             'dob' => 'required|date',
-            'college_id' => 'required|exists:colleges,id', // Ensure the college exists
+            'college_id' => 'required|exists:colleges,id',
         ]);
 
         // Create new student
@@ -53,7 +53,7 @@ class StudentController extends Controller
      */
     public function show(string $id)
     {
-        // Show details for a specific student 
+        // Show details for a specific student
         $student = Student::findOrFail($id);
         return view('students.show', compact('student'));
     }
@@ -77,8 +77,8 @@ class StudentController extends Controller
         // Validate incoming data
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:students,email,' . $id,
-            'phone' => 'required|string|regex:/^\d{10}$/',
+            'email' => 'required|email|unique:students,email,' . $id, // Exclude current student from the unique check
+            'phone' => 'required|string|regex:/^\d{10}$/', // Adjust regex if needed
             'dob' => 'required|date',
             'college_id' => 'required|exists:colleges,id',
         ]);

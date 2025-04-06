@@ -12,6 +12,7 @@ class CollegeController extends Controller
      */
     public function index()
     {
+        // Fetch all colleges
         $colleges = College::all();
         return view('colleges.index', compact('colleges'));
     }
@@ -29,13 +30,16 @@ class CollegeController extends Controller
      */
     public function store(Request $request)
     {
+        // Validate the input data
         $validated = $request->validate([
             'name' => 'required|string|unique:colleges,name',
             'address' => 'required|string',
         ]);
 
+        // Create a new college
         College::create($validated);
 
+        // Redirect with success message
         return redirect()->route('colleges.index')->with('success', 'College created successfully.');
     }
 
@@ -44,6 +48,7 @@ class CollegeController extends Controller
      */
     public function edit(string $id)
     {
+        // Fetch the college by its ID
         $college = College::findOrFail($id);
         return view('colleges.edit', compact('college'));
     }
@@ -53,15 +58,19 @@ class CollegeController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        // Find the college by ID
         $college = College::findOrFail($id);
 
+        // Validate the input data (allowing the current name to be unchanged)
         $validated = $request->validate([
-            'name' => 'required|string|unique:colleges,name,' . $college->id,
+            'name' => 'required|string|unique:colleges,name,' . $college->id, // Skip unique check for the current record
             'address' => 'required|string',
         ]);
 
+        // Update the college
         $college->update($validated);
 
+        // Redirect with success message
         return redirect()->route('colleges.index')->with('success', 'College updated successfully.');
     }
 
@@ -70,9 +79,11 @@ class CollegeController extends Controller
      */
     public function destroy(string $id)
     {
+        // Fetch the college and delete it
         $college = College::findOrFail($id);
         $college->delete();
 
+        // Redirect with success message
         return redirect()->route('colleges.index')->with('success', 'College deleted successfully.');
     }
 }
