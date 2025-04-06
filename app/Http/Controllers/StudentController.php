@@ -38,7 +38,7 @@ class StudentController extends Controller
     {
         // Get all colleges to populate the dropdown in the form
         $colleges = College::all();
-        return view('students.create', compact('colleges'));
+        return view('students.form', compact('colleges'));
     }
 
     /**
@@ -50,10 +50,12 @@ class StudentController extends Controller
      $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:students,email',
-            'phone' => 'required|string|regex:/^\d{10}$/', // Ensure this matches your phone format
+            'phone' => 'required|string|regex:/^\d{8}$/', // Ensure this matches your phone format
             'dob' => 'required|date',
             'college_id' => 'required|exists:colleges,id', // Ensure the college exists
     ]);
+
+    
 
         // Create new student
         Student::create($request->all());
@@ -80,7 +82,7 @@ class StudentController extends Controller
         // Get the student and colleges for the edit form
         $student = Student::findOrFail($id);
         $colleges = College::all();
-        return view('students.edit', compact('student', 'colleges'));
+        return view('students.form', compact('student', 'colleges'));
     }
 
     /**
@@ -92,7 +94,7 @@ class StudentController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:students,email,' . $id, // Exclude current student from the unique check
-            'phone' => 'required|string|regex:/^\d{10}$/', // Adjust regex if needed
+            'phone' => 'required|string|regex:/^\d{8}$/', 
             'dob' => 'required|date',
             'college_id' => 'required|exists:colleges,id',
         ]);

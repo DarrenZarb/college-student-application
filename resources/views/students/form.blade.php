@@ -1,16 +1,25 @@
 @extends('layouts.app')
 
-@section('title', isset($student) ? 'Edit Student' : 'Add New Student')
+@section('title', 'Add New Student')
 
 @section('content')
     <h1>{{ isset($student) ? 'Edit Student' : 'Add New Student' }}</h1>
 
-    <!-- Form for creating or editing a student -->
+    @if($errors->any())
+        <div class="alert alert-danger">
+            <ul class="mb-0">
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     <form action="{{ isset($student) ? route('students.update', $student->id) : route('students.store') }}" method="POST">
         @csrf
-        @isset($student)
-            @method('PUT') <!-- If editing an existing student, use PUT method -->
-        @endisset
+        @if(isset($student))
+            @method('PUT') <!-- This is important for updating an existing record -->
+        @endif
 
         <!-- Student Name -->
         <div class="form-group">
@@ -36,7 +45,7 @@
             <input type="date" name="dob" id="dob" class="form-control" value="{{ old('dob', $student->dob ?? '') }}" required>
         </div>
 
-        <!-- College -->
+        <!-- College Dropdown -->
         <div class="form-group">
             <label for="college_id">College</label>
             <select name="college_id" id="college_id" class="form-control" required>
@@ -48,6 +57,6 @@
             </select>
         </div>
 
-        <button type="submit" class="btn btn-success mt-3">Save</button>
+        <button type="submit" class="btn btn-success mt-3">{{ isset($student) ? 'Update' : 'Save' }}</button>
     </form>
 @endsection
