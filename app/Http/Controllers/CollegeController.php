@@ -30,6 +30,10 @@ class CollegeController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'name' => 'required|string|max:255|unique:colleges,name',  
+        ]);
+
         // Validate the input data
         $validated = $request->validate([
             'name' => 'required|string|unique:colleges,name',  

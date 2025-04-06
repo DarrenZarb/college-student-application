@@ -12,24 +12,32 @@ class StudentController extends Controller
      * Display a listing of the resource.
      */
     public function index(Request $request)
-{
-    // Get all students, optionally filter by college if needed
-    $students = Student::with('college');
+    {
+        // Get all students, optionally filter by college if needed
+        $students = Student::with('college');
 
-    // Filter students by college if a college_id is selected
-    if ($request->has('college_id') && $request->college_id) {
-        $students = $students->where('college_id', $request->college_id);
+        // Filter students by college if a college_id is selected
+        if ($request->has('college_id') && $request->college_id) {
+            $students = $students->where('college_id', $request->college_id);
+        }
+
+        // Sort students by name if a sort parameter is passed
+        if ($request->has('sort')) {
+            if ($request->sort == 'name_asc') {
+                $students = $students->orderBy('name', 'asc');
+            } elseif ($request->sort == 'name_desc') {
+                $students = $students->orderBy('name', 'desc');
+            }
+        }
+
+        // Paginate the students (set a fixed number per page)
+        $students = $students->paginate(6);
+
+        // Get all colleges for the filter dropdown
+        $colleges = College::all();
+
+        return view('students.index', compact('students', 'colleges'));
     }
-
-    // Fetch students with their college info
-    $students = $students->get();
-
-    // Get all colleges for the filter dropdown
-    $colleges = College::all();
-
-    return view('students.index', compact('students', 'colleges'));
-}
-
 
     /**
      * Show the form for creating a new resource.
@@ -47,15 +55,13 @@ class StudentController extends Controller
     public function store(Request $request)
     {
         // Validate the incoming data
-     $request->validate([
+        $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:students,email',
             'phone' => 'required|string|regex:/^\d{8}$/', // Ensure this matches your phone format
             'dob' => 'required|date',
             'college_id' => 'required|exists:colleges,id', // Ensure the college exists
-    ]);
-
-    
+        ]);
 
         // Create new student
         Student::create($request->all());

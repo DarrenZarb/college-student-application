@@ -5,6 +5,21 @@
 @section('content')
     <h1>Students</h1>
 
+    <!-- Display success or error messages -->
+    @if(session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    @elseif(session('error'))
+        <div class="alert alert-danger">
+            {{ session('error') }}
+        </div>
+    @endif
+
+    <!-- Sort Button -->
+    @include('partials.sort')
+
+    <!-- Filter Form -->
     <form method="GET" action="{{ route('students.index') }}">
         <div class="form-group">
             <label for="college">Filter by College</label>
@@ -21,19 +36,18 @@
 
     <a href="{{ route('students.create') }}" class="btn btn-primary mt-3">Add New Student</a>
 
+    <!-- Students Table -->
     <table class="table mt-3">
         <thead>
             <tr>
-                <th>#</th>
                 <th>Name</th>
                 <th>College</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
-            @foreach($students as $student)
+            @forelse($students as $student)
                 <tr>
-                    <td>{{ $student->id }}</td>
                     <td>{{ $student->name }}</td>
                     <td>{{ $student->college->name }}</td>
                     <td>
@@ -46,7 +60,16 @@
                         </form>
                     </td>
                 </tr>
-            @endforeach
+            @empty
+                <tr>
+                    <td colspan="3" class="text-center">No students found.</td>
+                </tr>
+            @endforelse
         </tbody>
     </table>
+
+    <!-- Pagination -->
+    <div class="d-flex justify-content-center">
+        {{ $students->links('pagination::bootstrap-5') }}
+    </div>
 @endsection
