@@ -32,8 +32,8 @@ class CollegeController extends Controller
     {
         // Validate the input data
         $validated = $request->validate([
-            'name' => 'required|string|unique:colleges,name',
-            'address' => 'required|string',
+            'name' => 'required|string|unique:colleges,name',  
+        'address' => 'required|string',  
         ]);
 
         // Create a new college
@@ -85,5 +85,13 @@ class CollegeController extends Controller
 
         // Redirect with success message
         return redirect()->route('colleges.index')->with('success', 'College deleted successfully.');
+    }
+    public function show(string $id)
+    {
+        // Find the college by ID
+        $college = College::findOrFail($id);
+
+        // Return the view and pass the college data
+        return view('colleges.show', compact('college'));
     }
 }

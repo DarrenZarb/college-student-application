@@ -11,12 +11,25 @@ class StudentController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        // Get all students, optionally filter by college if needed
-        $students = Student::with('college')->get(); // Fetch students with their college info
-        return view('students.index', compact('students'));
+    public function index(Request $request)
+{
+    // Get all students, optionally filter by college if needed
+    $students = Student::with('college');
+
+    // Filter students by college if a college_id is selected
+    if ($request->has('college_id') && $request->college_id) {
+        $students = $students->where('college_id', $request->college_id);
     }
+
+    // Fetch students with their college info
+    $students = $students->get();
+
+    // Get all colleges for the filter dropdown
+    $colleges = College::all();
+
+    return view('students.index', compact('students', 'colleges'));
+}
+
 
     /**
      * Show the form for creating a new resource.
@@ -33,18 +46,19 @@ class StudentController extends Controller
      */
     public function store(Request $request)
     {
-        // Validate incoming data
-        $request->validate([
+        // Validate the incoming data
+     $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:students,email',
-            'phone' => 'required|string|regex:/^\d{10}$/', // Adjust regex if needed
+            'phone' => 'required|string|regex:/^\d{10}$/', // Ensure this matches your phone format
             'dob' => 'required|date',
-            'college_id' => 'required|exists:colleges,id',
-        ]);
+            'college_id' => 'required|exists:colleges,id', // Ensure the college exists
+    ]);
 
         // Create new student
         Student::create($request->all());
 
+        // Redirect with a success message
         return redirect()->route('students.index')->with('success', 'Student created successfully');
     }
 

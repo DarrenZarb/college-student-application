@@ -20,5 +20,5 @@ Route::get('/', function () {
 });
 
 // Resourceful routes for colleges and students
-Route::resource('colleges', CollegeController::class);
+Route::resource('colleges', controller: CollegeController::class);
 Route::resource('students', controller: StudentController::class);

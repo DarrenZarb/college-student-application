@@ -9,7 +9,6 @@
     <table class="table mt-3">
         <thead>
             <tr>
-                <th>#</th>
                 <th>Name</th>
                 <th>Actions</th>
             </tr>
@@ -17,7 +16,7 @@
         <tbody>
             @foreach($colleges as $college)
                 <tr>
-                    <td>{{ $college->id }}</td>
+                    <!-- <td>{{ $college->id }}</td> -->
                     <td>{{ $college->name }}</td>
                     <td>
                         <a href="{{ route('colleges.show', $college->id) }}" class="btn btn-info btn-sm">View</a>
