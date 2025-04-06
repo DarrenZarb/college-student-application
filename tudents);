@@ -1,0 +1,45 @@
+[90m= [39m[34;4mIlluminate\Database\Eloquent\Collection[39;24m {#6099
+    [34mall[39m: [
+      [34;4mApp\Models\Student[39;24m {#6102
+        [34mid[39m: [35m1[39m,
+        [34mname[39m: "[32mDarren[39m",
+        [34memail[39m: "[32mdarrenzarb98@hotmail.com[39m",
+        [34mphone[39m: "[32m99150012[39m",
+        [34mdob[39m: "[32m1998-07-01[39m",
+        [34mcollege_id[39m: [35m1[39m,
+        [34mcreated_at[39m: "[32m2025-04-06 06:59:41[39m",
+        [34mupdated_at[39m: "[32m2025-04-06 06:59:41[39m",
+      },
+      [34;4mApp\Models\Student[39;24m {#6135
+        [34mid[39m: [35m3[39m,
+        [34mname[39m: "[32mPeter[39m",
+        [34memail[39m: "[32mpeter97@gmail.com[39m",
+        [34mphone[39m: "[32m99236533[39m",
+        [34mdob[39m: "[32m2003-04-02[39m",
+        [34mcollege_id[39m: [35m1[39m,
+        [34mcreated_at[39m: "[32m2025-04-06 07:05:26[39m",
+        [34mupdated_at[39m: "[32m2025-04-06 07:05:26[39m",
+      },
+      [34;4mApp\Models\Student[39;24m {#6179
+        [34mid[39m: [35m8[39m,
+        [34mname[39m: "[32mDaniel[39m",
+        [34memail[39m: "[32mdanielpisani@gmail.com[39m",
+        [34mphone[39m: "[32m99765421[39m",
+        [34mdob[39m: "[32m2005-08-09[39m",
+        [34mcollege_id[39m: [35m1[39m,
+        [34mcreated_at[39m: "[32m2025-04-06 07:09:27[39m",
+        [34mupdated_at[39m: "[32m2025-04-06 07:09:27[39m",
+      },
+      [34;4mApp\Models\Student[39;24m {#6178
+        [34mid[39m: [35m10[39m,
+        [34mname[39m: "[32mAnna[39m",
+        [34memail[39m: "[32mAnnaswt@hotmail.com[39m",
+        [34mphone[39m: "[32m99298765[39m",
+        [34mdob[39m: "[32m1978-07-10[39m",
+        [34mcollege_id[39m: [35m1[39m,
+        [34mcreated_at[39m: "[32m2025-04-06 07:17:03[39m",
+        [34mupdated_at[39m: "[32m2025-04-06 07:17:03[39m",
+      },
+    ],
+  }
+

@@ -12,8 +12,9 @@ class CollegeController extends Controller
      */
     public function index()
     {
-        // Fetch all colleges
-        $colleges = College::all();
+        // Fetch all colleges and count the number of students per college
+        // You can use ->with('students') if you need the actual students collection
+        $colleges = College::withCount('students')->get();
         return view('colleges.index', compact('colleges'));
     }
 
@@ -31,15 +32,16 @@ class CollegeController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255|unique:colleges,name',  
-            'address' => 'required|string',  
+            'name'    => 'required|string|max:255|unique:colleges,name',
+            'address' => 'required|string',
         ]);
 
         // Create a new college
         College::create($request->all());
 
-        // Redirect with success message
-        return redirect()->route('colleges.index')->with('success', 'College created successfully.');
+        // Redirect with a success message
+        return redirect()->route('colleges.index')
+                         ->with('success', 'College created successfully.');
     }
 
     /**
@@ -62,15 +64,16 @@ class CollegeController extends Controller
 
         // Validate the input data (allowing the current name to be unchanged)
         $request->validate([
-            'name' => 'required|string|unique:colleges,name,' . $college->id, // Skip unique check for the current record
+            'name'    => 'required|string|unique:colleges,name,' . $college->id,
             'address' => 'required|string',
         ]);
 
         // Update the college
         $college->update($request->all());
 
-        // Redirect with success message
-        return redirect()->route('colleges.index')->with('success', 'College updated successfully.');
+        // Redirect with a success message
+        return redirect()->route('colleges.index')
+                         ->with('success', 'College updated successfully.');
     }
 
     /**
@@ -82,16 +85,20 @@ class CollegeController extends Controller
         $college = College::findOrFail($id);
         $college->delete();
 
-        // Redirect with success message
-        return redirect()->route('colleges.index')->with('success', 'College deleted successfully.');
+        // Redirect with a success message
+        return redirect()->route('colleges.index')
+                         ->with('success', 'College deleted successfully.');
     }
     
+    /**
+     * Display the specified resource.
+     */
     public function show(string $id)
     {
-        // Find the college by ID
-        $college = College::findOrFail($id);
+        // Find the college by ID, eager loading the related students
+        $college = College::with('students')->findOrFail($id);
 
-        // Return the view and pass the college data
+        // Return the view and pass the college (and its associated students)
         return view('colleges.show', compact('college'));
     }
 }

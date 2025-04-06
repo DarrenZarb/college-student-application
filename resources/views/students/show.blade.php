@@ -9,7 +9,7 @@
         <p><strong>Name:</strong> {{ $student->name }}</p>
         <p><strong>Email:</strong> {{ $student->email }}</p>
         <p><strong>Phone:</strong> {{ $student->phone }}</p>
-        <p><strong>Date of Birth:</strong> {{ $student->dob }}</p>
+        <p><strong>Date of Birth:</strong> {{ \Carbon\Carbon::parse($student->dob)->format('d-m-Y') }}</p>
         <p><strong>College:</strong> {{ $student->college->name ?? 'N/A' }}</p>
     </div>
 

@@ -60,7 +60,8 @@
         <!-- Date of Birth -->
         <div class="form-group">
             <label for="dob">Date of Birth</label>
-            <input type="date" name="dob" id="dob" class="form-control @error('dob') is-invalid @enderror" value="{{ old('dob', $student->dob ?? '') }}" required>
+            <input type="text" name="dob" id="dob" class="form-control @error('dob') is-invalid @enderror"
+                value="{{ old('dob', isset($student) ? \Carbon\Carbon::parse($student->dob)->format('d/m/Y') : '') }}" required>
             @error('dob')
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror
@@ -71,7 +72,9 @@
             <label for="college_id">College</label>
             <select name="college_id" id="college_id" class="form-control @error('college_id') is-invalid @enderror" required>
                 @foreach($colleges as $college)
-                    <option value="{{ $college->id }}" {{ old('college_id', $student->college_id ?? '') == $college->id ? 'selected' : '' }}>{{ $college->name }}</option>
+                    <option value="{{ $college->id }}" {{ old('college_id', $student->college_id ?? '') == $college->id ? 'selected' : '' }}>
+                        {{ $college->name }}
+                    </option>
                 @endforeach
             </select>
             @error('college_id')
@@ -81,4 +84,16 @@
 
         <button type="submit" class="btn btn-success mt-3">{{ isset($student) ? 'Update' : 'Save' }}</button>
     </form>
+@endsection
+
+@section('scripts')
+    <script>
+        $(document).ready(function() {
+            // Initialize Flatpickr with dd/mm/yyyy format
+            flatpickr("#dob", {
+                dateFormat: "d/m/Y", // Set the format to dd/mm/yyyy
+                defaultDate: "{{ old('dob', isset($student) ? \Carbon\Carbon::parse($student->dob)->format('d/m/Y') : '') }}",
+            });
+        });
+    </script>
 @endsection

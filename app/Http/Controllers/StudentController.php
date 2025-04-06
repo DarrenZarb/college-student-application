@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Student;
 use App\Models\College;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class StudentController extends Controller
 {
@@ -13,25 +14,25 @@ class StudentController extends Controller
      */
     public function index(Request $request)
     {
-        // Get all students, optionally filter by college if needed
-        $students = Student::with('college');
+        // Start a query on the students model, including the related college
+        $query = Student::with('college');
 
         // Filter students by college if a college_id is selected
         if ($request->has('college_id') && $request->college_id) {
-            $students = $students->where('college_id', $request->college_id);
+            $query->where('college_id', $request->college_id);
         }
 
-        // Sort students by name if a sort parameter is passed
+        // Sort students by name if a sort parameter is passed in the query string
         if ($request->has('sort')) {
             if ($request->sort == 'name_asc') {
-                $students = $students->orderBy('name', 'asc');
+                $query->orderBy('name', 'asc');
             } elseif ($request->sort == 'name_desc') {
-                $students = $students->orderBy('name', 'desc');
+                $query->orderBy('name', 'desc');
             }
         }
 
-        // Paginate the students (set a fixed number per page)
-        $students = $students->paginate(6);
+        // Paginate the students with 8 records per page and append query parameters
+        $students = $query->paginate(8)->appends($request->all());
 
         // Get all colleges for the filter dropdown
         $colleges = College::all();
@@ -56,15 +57,18 @@ class StudentController extends Controller
     {
         // Validate the incoming data
         $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:students,email',
-            'phone' => 'required|string|regex:/^\d{8}$/', // Ensure this matches your phone format
-            'dob' => 'required|date',
+            'name'       => 'required|string|max:255',
+            'email'      => 'required|email|unique:students,email',
+            'phone'      => 'required|string|regex:/^\d{8}$/', // Ensure this matches your phone format
+            'dob'        => 'required|date',
             'college_id' => 'required|exists:colleges,id', // Ensure the college exists
         ]);
 
-        // Create new student
-        Student::create($request->all());
+        // Convert date format (from dd/mm/yyyy to yyyy-mm-dd)
+        $dob = Carbon::createFromFormat('d/m/Y', $request->dob)->format('Y-m-d');
+
+        // Create new student with formatted dob
+        Student::create($request->merge(['dob' => $dob])->all());
 
         // Redirect with a success message
         return redirect()->route('students.index')->with('success', 'Student created successfully');
@@ -98,16 +102,19 @@ class StudentController extends Controller
     {
         // Validate incoming data
         $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:students,email,' . $id, // Exclude current student from the unique check
-            'phone' => 'required|string|regex:/^\d{8}$/', 
-            'dob' => 'required|date',
+            'name'       => 'required|string|max:255',
+            'email'      => 'required|email|unique:students,email,' . $id, // Exclude current student from the unique check
+            'phone'      => 'required|string|regex:/^\d{8}$/',
+            'dob'        => 'required|date',
             'college_id' => 'required|exists:colleges,id',
         ]);
 
-        // Find the student and update their details
+        // Convert date format (from dd/mm/yyyy to yyyy-mm-dd)
+        $dob = Carbon::createFromFormat('d/m/Y', $request->dob)->format('Y-m-d');
+
+        // Find the student and update their details with formatted dob
         $student = Student::findOrFail($id);
-        $student->update($request->all());
+        $student->update($request->merge(['dob' => $dob])->all());
 
         return redirect()->route('students.index')->with('success', 'Student updated successfully');
     }

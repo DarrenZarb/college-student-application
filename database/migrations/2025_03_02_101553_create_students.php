@@ -26,7 +26,7 @@ return new class extends Migration
             $table->string('phone')->nullable(false); // Ensure to validate format in your controllers if needed
             
             // Create a 'dob' (date of birth) column, required
-            $table->date('dob'); // Required field for date of birth
+            $table->date('dob'); 
             
             // Create a foreign key column 'college_id', referencing the 'id' column of the 'colleges' table
             // If a college is deleted, all related students will also be deleted (cascade delete)
